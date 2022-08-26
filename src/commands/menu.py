@@ -1,6 +1,6 @@
 import requests
-from bs4 import BeautifulSoup
 import discord
+from bs4 import BeautifulSoup
 from enum import Enum
 
 class Restaurants(Enum):
@@ -15,29 +15,27 @@ class Restaurants(Enum):
     ylistö="https://www.semma.fi/modules/MenuRss/MenuRss/CurrentDay?costNumber=1403&language=fi"
     rentukka="https://www.semma.fi/modules/MenuRss/MenuRss/CurrentDay?costNumber=1416&language=fi"
 
-class Menu():
+async def send_menu(response: discord.Interaction.response, key: Enum):
+    rss_url = key.value
+    url = requests.get(rss_url)
+    soup = BeautifulSoup(url.text, "xml")
+    title = soup.find("title")
+    item = soup.find("item")
+    date = soup.find("item").find("title")
+    description = item.find("description")
 
-    async def send_menu(response: discord.Interaction.response, key: Enum):
-        rss_url = key.value
-        url = requests.get(rss_url)
-        soup = BeautifulSoup(url.text, "xml")
-        title = soup.find("title")
-        item = soup.find("item")
-        date = soup.find("item").find("title")
-        description = item.find("description")
+    menu = description.text.split("<br>")
+    fields = list()
+    for menu_item in menu:
+        data = menu_item.split(":")
+        if len(data) >= 2:
+            if data[1] != "\n\n\n":
+                fields.append({"name":data[0],"value":data[1],"inline":False})
     
-        menu = description.text.split("<br>")
-        fields = list()
-        for menu_item in menu:
-            data = menu_item.split(":")
-            if len(data) >= 2:
-                if data[1] != "\n\n\n":
-                    fields.append({"name":data[0],"value":data[1],"inline":False})
-        
-        content = {
-            "title":title.text,
-            "description":date.string+"\n",
-            "fields":fields
-        }
-        embed = discord.Embed.from_dict(content)
-        await response.send_message(embed=embed)
+    content = {
+        "title":title.text,
+        "description":date.string+"\n",
+        "fields":fields
+    }
+    embed = discord.Embed.from_dict(content)
+    await response.send_message(embed=embed)
