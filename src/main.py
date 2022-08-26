@@ -3,7 +3,7 @@
 from decouple import config
 import discord
 from discord import app_commands
-import commands as commands
+import add_commands as add_commands
 
 BOT_TOKEN = config('BOT_TOKEN')
 
@@ -23,7 +23,7 @@ class NewBot(discord.Client):
 
 bot = NewBot()
 tree = app_commands.CommandTree(bot)
-commands.AddCommands(tree)
+add_commands.AddCommands(tree)
 
 def main():
     bot.run(BOT_TOKEN)
