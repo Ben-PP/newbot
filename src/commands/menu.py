@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from enum import Enum
 
 class Restaurants(Enum):
+    # Student restaurants
     taide="https://www.foodandco.fi/modules/MenuRss/MenuRss/CurrentDay?costNumber=0301&language=fi"
     piato="https://www.semma.fi/modules/MenuRss/MenuRss/CurrentDay?costNumber=1408&language=fi"
     maija="https://www.semma.fi/modules/MenuRss/MenuRss/CurrentDay?costNumber=1402&language=fi"
@@ -14,6 +15,8 @@ class Restaurants(Enum):
     uno="https://www.semma.fi/modules/MenuRss/MenuRss/CurrentDay?costNumber=1414&language=fi"
     ylistö="https://www.semma.fi/modules/MenuRss/MenuRss/CurrentDay?costNumber=1403&language=fi"
     rentukka="https://www.semma.fi/modules/MenuRss/MenuRss/CurrentDay?costNumber=1416&language=fi"
+    # Others
+    salvia="https://www.foodandco.fi/modules/MenuRss/MenuRss/CurrentDay?costNumber=1300&language=fi"
 
 async def send_menu(response: discord.Interaction.response, key: Enum):
     rss_url = key.value
